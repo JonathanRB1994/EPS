@@ -1,0 +1,9 @@
+# CONFIGURACION DE LA APP
+DirectoryIndex /coosajo-support/public/index.php
+
+# Bloquear la indexacion
+Options All -Indexes
+
+# Páginas de errores
+ErrorDocument 404 /coosajo-support/public/404.html
+ErrorDocument 403 /coosajo-support/public/403.html

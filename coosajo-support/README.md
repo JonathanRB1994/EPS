@@ -1,0 +1,1 @@
+Condifuración .htaccess servidor apache verificar en la instalacion php el modulo mod_rewrite
