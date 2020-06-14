@@ -6,8 +6,10 @@
     <title>COOSAJO R.L.</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="/coosajo-support/public/lib/bootstrap-4.5.0/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="./lib/bootstrap-4.5.0/css/bootstrap.min.css">    
 
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/styles.css">   
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -39,25 +41,30 @@
     </div>
   </nav>  
 
+  <!-- ARCHIVOS CON FUNCIONALIDADES NECESARIAS -->
+  <?php
+    // Conexión a la BD de suporte técnico
+    require '../vendor/support_db.php';
+  ?>
+
   <div class="main">
     <div class="container">
-
-      <div class="card bg-dark mt-4 text-white">
-        <div class="card-header">
-          <h5 class="card-title">Card title</h5>
-        </div>
-        <div class="card-body">                    
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        </div>
-        <img src="..." class="card-img-top" alt="...">
-      </div>
-
+      <div class="cards">
+        <!-- Impresión de las tarjetas -->
+        <?php
+          if( isset($_GET["steps"]) ){
+            SupportPrintStepCards($_GET["steps"]);
+          }else{            
+            SupportPrintSupportCards();
+          }
+          
+        ?>      
+      </div>      
     </div>
   </div>
     <!-- Bootstrap -->
-    <script src="/coosajo-support/public/lib/jquery-3.5.1/jquery-3.5.1.slim.min.js"></script>
-    <script src="/coosajo-support/public/lib/popper-1.16.0/popper.min.js"></script>
-    <script src="/coosajo-support/public/lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+    <script src="./lib/jquery-3.5.1/jquery-3.5.1.slim.min.js"></script>
+    <script src="./lib/popper-1.16.0/popper.min.js"></script>
+    <script src="./lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>
