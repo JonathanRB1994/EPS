@@ -4,7 +4,7 @@ USE support_db;
 -- USERS TABLE
 CREATE TABLE users(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(16) NOT NULL,
+    username VARCHAR(16) NOT NULL UNIQUE,
     password VARCHAR(60) NOT NULL,
     fullname VARCHAR(100) NOT NULL
 );
