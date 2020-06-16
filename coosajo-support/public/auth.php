@@ -10,13 +10,15 @@
         // Validar los datos de inicio se sesión,
         // Si los datos son correctos se crearan variables de sesion
         // Y se iniciara login_user como TRUE
-        SupportLogin();        
+        SupportLogin();   
+        unset($_POST["username"]);
+        unset($_POST["password"]);
     }
 
     // Si la sesión ya cuenta con un usuario logeado, debe redirigirse a la pagina de administrador
     if(isset($_SESSION["login_user"])) { 
         if($_SESSION["login_user"]==TRUE) {
-            header('Location: admin-index.php');
+            header('Location: admin_index.php');
         } 
     }
   
@@ -103,7 +105,7 @@
                     <form action="auth.php" method="POST">
                         <div class="form-group">
                             <label for="inputUsername">Ingresa el nombre de usuario</label>
-                            <input type="test" class="form-control" id="inputUsername" name="username" placeholder="Nombre de ususario">
+                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Nombre de ususario">
                         </div>
                         <div class="form-group">
                             <label for="inputPassword4">Ingresa la contraseña</label>

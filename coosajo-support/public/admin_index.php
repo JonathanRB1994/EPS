@@ -3,13 +3,15 @@
     session_start();
     // Si la sesión ya cuenta con un usuario logeado, debe redirigirse a la pagina de administrador
     if(isset($_SESSION["login_user"])) { 
-        if($_SESSION["login_user"]==TRUE) {
-            header('Location: admin_index.php');
+        if($_SESSION["login_user"]==FALSE) {
+            header('Location: index.php');
         }
+    }else{
+        header('Location: index.php');
     }
 
-  // Conexión a la BD de suporte técnico
-  require '../vendor/support_db.php';
+    // Conexión a la BD de suporte técnico
+    require '../vendor/admin_support_db.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +19,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUPPORT</title>
+    <title>ADMIN-SUPPORT</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="./lib/bootstrap-4.5.0/css/bootstrap.min.css">
@@ -29,7 +31,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.php">SUPPORT</a>
+            <a class="navbar-brand" href="admin_index.php">ADMIN-SUPPORT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -47,7 +49,8 @@
                             <a class="dropdown-item" href="/links">Consultar Ticket</a>
                             <a class="dropdown-item" href="/links/add">Solicitar Ticket</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="auth.php">Autenticarme</a>
+                            <a class="dropdown-item" href="auth.php">Nuevo usuario</a>
+                            <a class="dropdown-item" href="auth.php">Cerrar sesión</a>
                         </div>
                     </li>
                 </ul>
@@ -61,8 +64,8 @@
 
     <!-- Información de la seeción acutal -->
     <?php
-    if( isset($_GET["steps"]) ){
-  ?>
+        if( isset($_GET["steps"]) ){
+    ?>
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
             <h1 class="display-4">Pasos para solucionar tu problema</h1>
@@ -70,8 +73,8 @@
         </div>
     </div>
     <?php
-    }else{
-  ?>
+        }else{
+    ?>
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
             <h1 class="display-4">Problemas técnicos</h1>
@@ -79,19 +82,23 @@
         </div>
     </div>
     <?php                  
-    }
-  ?>
+        }
+    ?>
 
     <!-- Contenedor de las tarjetas -->
     <div class="main">
         <div class="container">
             <div class="cards">
+                
                 <!-- Impresión de las tarjetas -->
                 <?php
-          if( isset($_GET["steps"]) ){
-            // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
-            SupportPrintStepCards();
-        ?>
+                    if( isset($_GET["steps"]) ){                    
+                ?>
+                
+                <?php
+                    // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
+                    AdminSupportPrintStepCards();
+                ?>
                 <!-- Tarjeta para crear o consultar un ticket -->
                 <div class="card bg-dark mt-4 text-white">
                     <div class="card-header">
@@ -108,10 +115,26 @@
                     </div>
                 </div>
                 <?php
-          }else{            
-            // mostrar soluciones y luego preguntar si encontro su problema
-            SupportPrintSupportCards();
-        ?>
+                    }else{
+                ?>
+                <!-- Agregar nuevo problema -->
+                <div class="card bg-dark mt-4 text-white">
+                    <div class="card-header">
+                        <h5 class="card-title inline">Agregar un nuevo problema técnico</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Si desea agregar un nuevo problema haga click en el boton.
+                        </p>
+
+                        <div class="text-center">
+                            <a href="admin_add_support.php" class="btn btn-success px-4">Agregar nuevo problema</a>
+                        </div>
+                    </div>
+                </div>
+                <?php            
+                    // mostrar soluciones y luego preguntar si encontro su problema
+                    AdminSupportPrintSupportCards();
+                ?>
                 <!-- Tarjeta para crear o consultar un ticket -->
                 <div class="card bg-dark mt-4 text-white">
                     <div class="card-header">
@@ -128,8 +151,8 @@
                     </div>
                 </div>
                 <?php
-          }          
-        ?>
+                    }          
+                ?>
 
             </div>
         </div>
