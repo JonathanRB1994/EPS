@@ -14,7 +14,7 @@
     require '../vendor/admin_support_db.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -44,13 +44,14 @@
                             Opciones
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="index.php">Problemas técnicos</a>
+                            <a class="dropdown-item" href="admin_index.php">Problemas técnicos</a>
+                            <a class="dropdown-item" href="admin_add_support.php">Nuevo problema</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/links">Consultar Ticket</a>
                             <a class="dropdown-item" href="/links/add">Solicitar Ticket</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="auth.php">Nuevo usuario</a>
-                            <a class="dropdown-item" href="auth.php">Cerrar sesión</a>
+                            <a class="dropdown-item" href="auth.php?logout=TRUE">Cerrar sesión</a>
                         </div>
                     </li>
                 </ul>
@@ -64,7 +65,7 @@
 
     <!-- Información de la seeción acutal -->
     <?php
-        if( isset($_GET["steps"]) ){
+        if( isset($_GET["support_id"]) ){
     ?>
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
@@ -92,13 +93,25 @@
                 
                 <!-- Impresión de las tarjetas -->
                 <?php
-                    if( isset($_GET["steps"]) ){                    
+                    if( isset($_GET["support_id"]) ){     
+                        AdminSupportPrintSupportCard();          
+                        // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
+                        AdminSupportPrintStepCards();
                 ?>
-                
-                <?php
-                    // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
-                    AdminSupportPrintStepCards();
-                ?>
+                <!-- Agregar nuevo paso -->
+                <div class="card bg-dark mt-4 text-white">
+                    <div class="card-header">
+                        <h5 class="card-title inline">Agregar un nuevo paso.</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Si desea agregar un nuevo paso para solucionar el problema haga click en el boton.
+                        </p>
+
+                        <div class="text-center">
+                            <a href="admin_add_support.php?support_id=<?php echo $_GET["support_id"]; ?>" class="btn btn-success px-4">Agregar nuevo paso</a>
+                        </div>
+                    </div>
+                </div>
                 <!-- Tarjeta para crear o consultar un ticket -->
                 <div class="card bg-dark mt-4 text-white">
                     <div class="card-header">

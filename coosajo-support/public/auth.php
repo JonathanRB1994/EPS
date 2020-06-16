@@ -1,12 +1,21 @@
 <!-- ARCHIVOS CON FUNCIONALIDADES NECESARIAS -->
 <?php
     session_start();
+    // Conexión a la BD de suporte técnico
+    require '../vendor/support_db.php';
 
+    // Mensajes
     $message_failedLogin = FALSE;
+
+    // Cerrar sesion
+    if(isset($_GET["logout"])){
+        if($_GET["logout"]==TRUE){
+            SupportLogout();
+        }
+    }
+
     if(isset($_POST["username"]) && isset($_POST["password"])){
-        $message_failedLogin = TRUE;
-        // Conexión a la BD de suporte técnico
-        require '../vendor/support_db.php';
+        $message_failedLogin = TRUE;        
         // Validar los datos de inicio se sesión,
         // Si los datos son correctos se crearan variables de sesion
         // Y se iniciara login_user como TRUE
@@ -24,7 +33,7 @@
   
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">

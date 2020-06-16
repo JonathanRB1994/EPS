@@ -12,7 +12,7 @@
   require '../vendor/support_db.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -61,7 +61,7 @@
 
     <!-- Información de la seeción acutal -->
     <?php
-    if( isset($_GET["steps"]) ){
+    if( isset($_GET["support_id"]) ){
   ?>
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
@@ -88,8 +88,9 @@
             <div class="cards">
                 <!-- Impresión de las tarjetas -->
                 <?php
-          if( isset($_GET["steps"]) ){
+          if( isset($_GET["support_id"]) ){
             // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
+            SupportPrintSupportCard();
             SupportPrintStepCards();
         ?>
                 <!-- Tarjeta para crear o consultar un ticket -->

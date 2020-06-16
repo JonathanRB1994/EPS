@@ -1,9 +1,17 @@
 <!-- ARCHIVOS CON FUNCIONALIDADES NECESARIAS -->
 <?php
-    // Conexión a la BD de suporte técnico
-    require '../vendor/admin_support_db.php';
+    session_start(); 
+    // Si la sesión ya cuenta con un usuario logeado, debe redirigirse a la pagina de administrador
+    if(isset($_SESSION["login_user"])) { 
+        if($_SESSION["login_user"]==FALSE) {
+            header('Location: index.php');
+        }
+    }else{
+        header('Location: index.php');
+    }
     
-    session_start();    
+    // Conexión a la BD de suporte técnico
+    require '../vendor/admin_support_db.php';           
 
     // Mensajes de alertas
     $message_failedAddSupport = FALSE;
@@ -25,7 +33,7 @@
     }
 
     // Insertar problema de soporte tecnico
-    if(isset($_GET["steps"]) && isset($_POST["number"]) && isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["image"])){                
+    if(isset($_GET["support_id"]) && isset($_POST["number"]) && isset($_POST["title"]) && isset($_POST["description"]) ){                
         // Agregar a la base de datos,        
         if(AdminAddSupportStep()==FALSE){
             $message_failedAddSupportStep = TRUE;
@@ -34,21 +42,10 @@
         unset($_POST["title"]);
         unset($_POST["description"]);        
         unset($_POST["image"]);
-    }
-
-    // Si la sesión ya cuenta con un usuario logeado, debe redirigirse a la pagina de administrador
-    if(isset($_SESSION["login_user"])) { 
-        if($_SESSION["login_user"]==FALSE) {
-            header('Location: index.php');
-        }
-    }else{
-        header('Location: index.php');
-    }
-
-  
+    }      
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -78,12 +75,14 @@
                             Opciones
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="index.php">Problemas técnicos</a>
+                        <a class="dropdown-item" href="admin_index.php">Problemas técnicos</a>
+                        <a class="dropdown-item" href="admin_add_support.php">Nuevo problema</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/links">Consultar Ticket</a>
                             <a class="dropdown-item" href="/links/add">Solicitar Ticket</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="auth.php">Autenticarme</a>
+                            <a class="dropdown-item" href="auth.php">Nuevo usuario</a>
+                            <a class="dropdown-item" href="auth.php?logout=TRUE">Cerrar sesión</a>
                         </div>
                     </li>
                 </ul>
@@ -96,23 +95,23 @@
     </nav>
 
     <?php
-        if( isset($_GET["steps"]) ){
-    ?>
-    <!-- Información de la seeción acutal -->
-    <div class="jumbotron d-none d-sm-none d-md-block">
-        <div class="container">
-            <h1 class="display-4">Agregar nuevo problema técnico</h1>
-            <p class="lead">Para agregar un nuevo problema técnico debe completar todos los datos del formulario.</p>
-        </div>
-    </div>
-    <?php
-        }else{
+        if( isset($_GET["support_id"]) ){
     ?>
     <!-- Información de la seeción acutal -->
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
             <h1 class="display-4">Pasos de solución</h1>
             <p class="lead">Agregar los pasos para la solución del problema técnico.</p>
+        </div>
+    </div>    
+    <?php
+        }else{
+    ?>
+    <!-- Información de la seeción acutal -->
+    <div class="jumbotron d-none d-sm-none d-md-block">
+        <div class="container">
+            <h1 class="display-4">Agregar nuevo problema técnico</h1>
+            <p class="lead">Para agregar un nuevo problema técnico debe completar todos los datos del formulario.</p>
         </div>
     </div>
     <?php
@@ -168,10 +167,7 @@
     <div class="main">
         <div class="container">
         <?php
-            if( isset($_GET["steps"]) ){
-        ?>
-            
-        <?php
+            if( isset($_GET["support_id"]) ){
             //if( TRUE ){
                 // Imprimir tarjeta del problema técnico y obtener numero de pasos agreagados
                 $total_steps = AdminSupportPrintSupportCard();
@@ -184,7 +180,7 @@
                     <h5 class="card-title">Agregar paso para solucionar el problema técnico</h5>
                 </div>
                 <div class="card-body">
-                    <form action="admin_add_support.php?steps=<?php echo $_GET["steps"]; ?>" method="POST">
+                    <form action="admin_add_support.php?support_id=<?php echo $_GET["support_id"]; ?>" method="POST">
                         <div class="form-group">
                             <label for="inputNumber">Ingresa el número del paso a agregar</label>
                             <input type="number" class="form-control" id="inputNumber" name="number" placeholder="Número" value="<?php echo ($total_steps+1); ?>">
