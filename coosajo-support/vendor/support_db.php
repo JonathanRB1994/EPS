@@ -41,7 +41,7 @@
             $stmt->close();
             // Terminar la conexion
             mysqli_close($conn);
-            exit;
+            return;
         }
 
         // Verificar la obtencion de datos en la consulta
@@ -59,6 +59,7 @@
             // Autenticacion verificada, Iniciar la session
             $_SESSION["login_user"] = TRUE;
             $_SESSION["login_user_id"] = $user["id"];
+            $_SESSION["login_user_role"] = $user["role"];
             $_SESSION["login_user_username"] = $user["username"];
             $_SESSION["login_user_fullname"] = $user["fullname"];
             // Cerrar prepared statement
@@ -147,6 +148,66 @@
         mysqli_close($conn);
     }
 
+    function SupportPrintSearchSupportCards(){
+        // Obtener la conexión
+        $conn = SupportConexion();
+
+        // Script de la ocnsulta
+        $sql="SELECT * FROM support WHERE title LIKE ?";
+        $stmt = $conn->prepare($sql); 
+        $param = "%".$_POST["search"]."%";
+        $stmt->bind_param("s", $param);   
+        $stmt->execute();
+        $result = $stmt->get_result();  
+        if (!$result) 
+        {
+            // De nuevo, no hacer esto en un sitio público, aunque nosotros mostraremos
+            // cómo obtener información del error
+            echo "Error: La ejecución de la consulta falló debido a: \n";
+            echo "Query: " . $sql . "\n";
+            echo "Errno: " . $conn->errno . "\n";
+            echo "Error: " . $conn->error . "\n";
+            // Cerrar prepared statement
+            $stmt->close();
+            // Terminar la conexion
+            mysqli_close($conn);
+            return;
+        }
+
+        // Verificar la obtencion de datos en la consulta
+        if ($result->num_rows === 0) {
+            //echo "Lo sentimos. No se encontraron resultados para la consulta.";
+            // Cerrar prepared statement
+            $stmt->close();
+            // Terminar la conexion
+            mysqli_close($conn);
+            return;
+        }
+
+        // Imprimir los datos
+        while ($row = $result->fetch_assoc())
+        {
+            $link =  "index.php?support_id=" . $row["id"];
+            echo "<div class=\"card bg-dark mt-4 text-white\">";
+            echo "\t<div class=\"card-header \">";
+            echo "\t\t<h5 class=\"card-title inline\">" . $row["title"] . "</h5>";            
+            echo "\t</div>";
+            echo "\t<div class=\"card-body\">";
+            echo "\t\t<p class=\"card-text\">" . $row["description"] . "</p>";
+            //echo "\t\t<p class=\"card-text\"><small class=\"text-muted\">" . $row["keywords"] . "</small></p>";
+            echo "\t\t<div class=\"text-center\">";
+            echo "\t\t\t<a href=\"" . $link . "\" class=\"btn btn-success px-4\"> Ver solución </a>";
+            echo "\t\t</div>";
+            echo "\t</div>";
+            echo "</div>";
+        }
+
+        // Cerrar prepared statement
+        $stmt->close();
+        // Terminar la conexion
+        mysqli_close($conn);
+    }
+
     // Imprimir cartas de soporte
     function SupportPrintSupportCards()
     {
@@ -170,17 +231,17 @@
             $stmt->close();
             // Terminar la conexion
             mysqli_close($conn);
-            exit;
+            return;
         }
 
         // Verificar la obtencion de datos en la consulta
         if ($result->num_rows === 0) {
-            echo "Lo sentimos. No se encontraron resultados para la consulta.";
+            //echo "Lo sentimos. No se encontraron resultados para la consulta.";
             // Cerrar prepared statement
             $stmt->close();
             // Terminar la conexion
             mysqli_close($conn);
-            exit;
+            return;
         }
 
         // Imprimir los datos
@@ -232,7 +293,7 @@
             $stmt->close();
             // Terminar la conexion
             mysqli_close($conn);
-            exit;
+            return;
         }
 
         // Verificar la obtencion de datos en la consulta

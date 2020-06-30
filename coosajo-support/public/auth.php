@@ -41,10 +41,10 @@
     <title>SUPPORT</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="./lib/bootstrap-4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
@@ -65,18 +65,18 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="index.php">Problemas técnicos</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/links">Consultar Ticket</a>
-                            <a class="dropdown-item" href="/links/add">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="auth.php">Autenticarme</a>
                         </div>
                     </li>
                 </ul>
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <form class="form-inline" method="POST" action="index.php">
+                    <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Buscar" name="search" id="search" aria-label="Search" autocomplete="off">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
                 </form>
-            </div>
+            </div> 
         </div>
     </nav>
 
@@ -114,11 +114,11 @@
                     <form action="auth.php" method="POST">
                         <div class="form-group">
                             <label for="inputUsername">Ingresa el nombre de usuario</label>
-                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Nombre de ususario">
+                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Nombre de ususario" required="required">
                         </div>
                         <div class="form-group">
                             <label for="inputPassword4">Ingresa la contraseña</label>
-                            <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Contraseña">
+                            <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Contraseña" required="required">
                         </div>                        
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary px-4 mt-3">Iniciar sesión</button>
@@ -132,9 +132,15 @@
     </div>
 
     <!-- Bootstrap -->
-    <script src="./lib/jquery-3.5.1/jquery-3.5.1.slim.min.js"></script>
-    <script src="./lib/popper-1.16.0/popper.min.js"></script>
-    <script src="./lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+    <script src="lib/jquery-3.5.1/jquery-3.5.1.min.js"></script>
+    <script src="lib/popper-1.16.0/popper.min.js"></script>
+    <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+
+    <!-- Typeahead -->
+    <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
+    
+    <!-- Functions -->
+    <script src="js/functions.js"></script>
 </body>
 
 </html>

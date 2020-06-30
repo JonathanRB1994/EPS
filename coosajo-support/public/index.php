@@ -8,8 +8,8 @@
         }
     }
 
-  // Conexión a la BD de suporte técnico
-  require '../vendor/support_db.php';
+    // Conexión a la BD de suporte técnico
+    require '../vendor/support_db.php';    
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -20,10 +20,10 @@
     <title>SUPPORT</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="./lib/bootstrap-4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
@@ -44,16 +44,16 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="index.php">Problemas técnicos</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/links">Consultar Ticket</a>
-                            <a class="dropdown-item" href="/links/add">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="auth.php">Autenticarme</a>
                         </div>
                     </li>
                 </ul>
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <form class="form-inline" method="POST" action="index.php">
+                    <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Buscar" name="search" id="search" aria-label="Search" autocomplete="off">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
                 </form>
             </div>
         </div>
@@ -61,8 +61,8 @@
 
     <!-- Información de la seeción acutal -->
     <?php
-    if( isset($_GET["support_id"]) ){
-  ?>
+        if( isset($_GET["support_id"]) ){
+    ?>
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
             <h1 class="display-4">Pasos para solucionar tu problema</h1>
@@ -70,8 +70,8 @@
         </div>
     </div>
     <?php
-    }else{
-  ?>
+        }else{
+    ?>
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
             <h1 class="display-4">Problemas técnicos</h1>
@@ -79,8 +79,8 @@
         </div>
     </div>
     <?php                  
-    }
-  ?>
+        }
+    ?>
 
     <!-- Contenedor de las tarjetas -->
     <div class="main">
@@ -88,31 +88,9 @@
             <div class="cards">
                 <!-- Impresión de las tarjetas -->
                 <?php
-          if( isset($_GET["support_id"]) ){
-            // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
-            SupportPrintSupportCard();
-            SupportPrintStepCards();
-        ?>
-                <!-- Tarjeta para crear o consultar un ticket -->
-                <div class="card bg-dark mt-4 text-white">
-                    <div class="card-header">
-                        <h5 class="card-title inline">¿Resolvió su problema? </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Sí tu problema persiste, crea una ticket para ser atendido por un técnico.
-                        </p>
-
-                        <div class="text-center">
-                            <a href="" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
-                            <a href="" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
-                        </div>
-                    </div>
-                </div>
-                <?php
-          }else{            
-            // mostrar soluciones y luego preguntar si encontro su problema
-            SupportPrintSupportCards();
-        ?>
+                    if(isset($_POST["search"])){
+                        SupportPrintSearchSupportCards(); 
+                ?>
                 <!-- Tarjeta para crear o consultar un ticket -->
                 <div class="card bg-dark mt-4 text-white">
                     <div class="card-header">
@@ -129,17 +107,65 @@
                     </div>
                 </div>
                 <?php
-          }          
-        ?>
+                    }else if( isset($_GET["support_id"]) ){
+                        // Imprimir los pasos de solución y por ultimo consultar si se resolvio el problema
+                        SupportPrintSupportCard();
+                        SupportPrintStepCards();
+                ?>
+                <!-- Tarjeta para crear o consultar un ticket -->
+                <div class="card bg-dark mt-4 text-white">
+                    <div class="card-header">
+                        <h5 class="card-title inline">¿Resolvió su problema? </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Sí tu problema persiste, crea una ticket para ser atendido por un técnico.
+                        </p>
+
+                        <div class="text-center">
+                            <a href="" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
+                            <a href="" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                    }else{            
+                        // mostrar soluciones y luego preguntar si encontro su problema
+                        SupportPrintSupportCards();
+                ?>
+                <!-- Tarjeta para crear o consultar un ticket -->
+                <div class="card bg-dark mt-4 text-white">
+                    <div class="card-header">
+                        <h5 class="card-title inline"> ¿Encontro su problema? </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Sí tu problema no aparece, crea una ticket para ser atendido por un
+                            técnico. </p>
+
+                        <div class="text-center">
+                            <a href="" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
+                            <a href="" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                    }          
+                ?>
 
             </div>
         </div>
     </div>
 
     <!-- Bootstrap -->
-    <script src="./lib/jquery-3.5.1/jquery-3.5.1.slim.min.js"></script>
-    <script src="./lib/popper-1.16.0/popper.min.js"></script>
-    <script src="./lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+    <script src="lib/jquery-3.5.1/jquery-3.5.1.min.js"></script>
+    <script src="lib/popper-1.16.0/popper.min.js"></script>
+    <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+
+    <!-- Typeahead -->
+    <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
+    
+    <!-- Functions -->
+    <script src="js/functions.js"></script>
+
 </body>
 
 </html>

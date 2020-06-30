@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COOSAJO R.L.</title>
+    <title>SUPPORT</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="/coosajo-support/public/lib/bootstrap-4.5.0/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">    
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="/">COOSAJO R.L.</a> 
+      <a class="navbar-brand" href="/">SUPPORT</a> 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -22,17 +22,18 @@
               Opciones
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/links">Consultar Ticket</a>            
+              <a class="dropdown-item" href="index.php">Problemas técnicos</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/links/add">Solicitar Ticket</a>
+              <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
+              <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/links/add">Autenticarme</a>
+              <a class="dropdown-item" href="auth.php">Autenticarme</a>
             </div>
           </li>                         
         </ul>
-        <form class="form-inline">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <form class="form-inline" method="POST" action="index.php">
+          <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Buscar" name="search" id="search" aria-label="Search" autocomplete="off">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
         </form>
       </div>
     </div>
@@ -44,13 +45,19 @@
       <p class="lead">Lo siento, esta página no ha sido encontrada.</p>
       <hr class="my-4">
       <p>Dirigete a la página principal.</p>
-      <a class="btn btn-primary btn-lg" href="/coosajo-support/" role="button">COOSAJO R.L.</a>
+      <a class="btn btn-primary btn-lg" href="index.php" role="button">SUPPORT</a>
     </div>
   </div>
 
     <!-- Bootstrap -->
-    <script src="/coosajo-support/public/lib/jquery-3.5.1/jquery-3.5.1.slim.min.js"></script>
-    <script src="/coosajo-support/public/lib/popper-1.16.0/popper.min.js"></script>
-    <script src="/coosajo-support/public/lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+    <script src="lib/jquery-3.5.1/jquery-3.5.1.min.js"></script>
+    <script src="lib/popper-1.16.0/popper.min.js"></script>
+    <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
+
+    <!-- Typeahead -->
+    <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
+    
+    <!-- Functions -->
+    <script src="js/functions.js"></script>
 </body>
 </html>

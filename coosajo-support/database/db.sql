@@ -5,23 +5,23 @@ USE support_db;
 CREATE TABLE users(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(16) NOT NULL UNIQUE,
+    role VARCHAR(16) NOT NULL DEFAULT 'technical',
     password VARCHAR(60) NOT NULL,
     fullname VARCHAR(100) NOT NULL
 );
 
-INSERT INTO users(username, password, fullname) VALUE ('jonathan', 'jonathan', 'Jonathan Kevin Adalberto Rojas Bollat');
+INSERT INTO users(username, password, fullname) VALUE ('admin', 'admin', 'Administrador de soporte tpecnico');
 
 DESCRIBE users;
 
 -- PROBLEM
 CREATE TABLE support(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    keywords TEXT NOT NULL,
     title VARCHAR(150) NOT NULL,
     description TEXT
 );
 
-INSERT INTO support(title, keywords, description) VALUE ('Impresora', 'Impresora no enciende conecta imprime', 'Resolver problemas relacionados con la impresora.');
+INSERT INTO support(title, description) VALUE ('Impresora', 'Resolver problemas relacionados con la impresora.');
 
 DESCRIBE support;
 
@@ -30,7 +30,7 @@ CREATE TABLE step(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     step INT NOT NULL,
     title VARCHAR(150) NOT NULL, 
-    img VARCHAR(255),
+    image TEXT,
     description TEXT,    
     support_id INT NOT NULL,    
     CONSTRAINT fk_step FOREIGN KEY (support_id) REFERENCES support(id)
@@ -42,3 +42,17 @@ INSERT INTO step(step, title, description, support_id) VALUE
     (3, 'Apagar la impresora', 'Revisa la luces que da la impresora, al finale debe dar una luz verde.',1);
 
 DESCRIBE step;
+
+
+
+
+-- SIMULACION DB TICKET
+create table ticket(
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    token VARCHAR(100) NOT NULL,
+    description TEXT
+);
+
+DESCRIBE ticket;
+
+INSERT INTO ticket(token, description) VALUES ("ABC123","Pendiente de corrección");
