@@ -317,7 +317,7 @@
 
     <!-- tablesorter -->
     <script src="lib/tablesorter/js/jquery.tablesorter.min.js"></script>
-    <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script
+    <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
 
     <!-- Functions -->
     <script src="js/functions.js"></script>

@@ -122,8 +122,8 @@
                         </p>
 
                         <div class="text-center">
-                            <a href="" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
-                            <a href="" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
+                            <a href="ticket.php?new_ticket=TRUE" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
+                            <a href="ticket.php" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
                         </div>
                     </div>
                 </div>
@@ -142,8 +142,8 @@
                             técnico. </p>
 
                         <div class="text-center">
-                            <a href="" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
-                            <a href="" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
+                            <a href="ticket.php?new_ticket=TRUE" class="btn btn-success px-4 mr-lg-5 mb-2 mb-md-0"> Crear un ticket</a>
+                            <a href="ticket.php" class="btn btn-success px-4 ml-lg-5 mb-2 mb-md-0"> Consultar un ticket</a>
                         </div>
                     </div>
                 </div>
@@ -160,9 +160,13 @@
     <script src="lib/popper-1.16.0/popper.min.js"></script>
     <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
 
-    <!-- Typeahead -->
+    <!-- Typeahead -->    
     <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
-    
+
+    <!-- tablesorter -->
+    <script src="lib/tablesorter/js/jquery.tablesorter.min.js"></script>
+    <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+
     <!-- Functions -->
     <script src="js/functions.js"></script>
 

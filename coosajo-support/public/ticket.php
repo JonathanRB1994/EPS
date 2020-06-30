@@ -2,24 +2,27 @@
 <?php
     session_start();
 
-    
+    $isAdmin=FALSE;
+    $isTechnical=FALSE;
     // Si la sesión ya cuenta con un usuario logeado, debe redirigirse a la pagina de administrador
     if(isset($_SESSION["login_user"])) { 
         if($_SESSION["login_user"]==TRUE) {
             $isAdmin = TRUE;
         }
+
+        if($_SESSION["login_user_role"]==="admin"){
+            $isAdmin=TRUE;
+        }
+    
+        
+        if($_SESSION["login_user_role"]==="technical"){
+            $isTechnical=TRUE;
+        }
     }
 
     
-    $isAdmin=FALSE;
-    if($_SESSION["login_user_role"]==="admin"){
-        $isAdmin=TRUE;
-    }
-
-    $isTechnical=FALSE;
-    if($_SESSION["login_user_role"]==="technical"){
-        $isTechnical=TRUE;
-    }
+    
+    
     // Conexión a la BD de suporte técnico
     require '../vendor/ticket_db.php';
 
@@ -256,9 +259,13 @@
     <script src="lib/popper-1.16.0/popper.min.js"></script>
     <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
 
-    <!-- Typeahead -->
+    <!-- Typeahead -->    
     <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
-    
+
+    <!-- tablesorter -->
+    <script src="lib/tablesorter/js/jquery.tablesorter.min.js"></script>
+    <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+
     <!-- Functions -->
     <script src="js/functions.js"></script>
 </body>

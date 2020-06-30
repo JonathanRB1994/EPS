@@ -236,9 +236,13 @@
     <script src="lib/popper-1.16.0/popper.min.js"></script>
     <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
 
-    <!-- Typeahead -->
+    <!-- Typeahead -->    
     <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
-    
+
+    <!-- tablesorter -->
+    <script src="lib/tablesorter/js/jquery.tablesorter.min.js"></script>
+    <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+
     <!-- Functions -->
     <script src="js/functions.js"></script>
 </body>

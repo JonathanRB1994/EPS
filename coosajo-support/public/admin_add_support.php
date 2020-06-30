@@ -29,7 +29,7 @@
     $total_steps = 0;
 
     // Insertar problema de soporte tecnico
-    if(isset($_POST["title"]) && isset($_POST["description"])){                
+    if(!isset($_GET["support_id"]) && isset($_POST["title"]) && isset($_POST["description"])){                
         // Agregar a la base de datos,        
         if(AdminAddSupport()==FALSE){
             $message_failedAddSupport = TRUE;
@@ -42,7 +42,6 @@
     $imgDir="";
     // Insertar paso de soporte tecnico
     if(isset($_GET["support_id"]) && isset($_POST["number"]) && isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["addImage"]) && isset($_POST["addURL"])){  
-        $imgDir="";        
         // Ver si vamos agregar una imagen
         if($_POST["addImage"]==="yes" && $_POST["addURL"]==="image"){
             $message_incorrectFile=TRUE;
@@ -291,7 +290,7 @@
                             <input type="number" class="form-control" id="inputNumber" name="number" placeholder="Número" required="required" value="<?php echo ($total_steps+1); ?>">
                         </div>
                         <div class="form-group">
-                            <label for="inputTitle">Ingresa el título del paso</label>fileI
+                            <label for="inputTitle">Ingresa el título del paso</label>
                             <input type="text" class="form-control" id="inputTitle" name="title" required="required" placeholder="Título del problema técnico">
                         </div>
                         <div class="form-group">
@@ -316,24 +315,24 @@
                             <div class="form-group text-center">
                                 <div class="form-check form-check-inline px-3">
                                     <input class="form-check-input" type="radio" name="addURL" id="inlineRadio3" value="URL">
-                                    <label class="form-check-label" for="inlineRadio2">URL</label>
+                                    <label class="form-check-label" for="inlineRadio3">URL</label>
                                 </div>    
                                 <div class="form-check form-check-inline px-3">
                                     <input class="form-check-input" type="radio" name="addURL" id="inlineRadio4" value="image" checked>
-                                    <label class="form-check-label" for="inlineRadio1">Imagen</label>
+                                    <label class="form-check-label" for="inlineRadio4">Imagen</label>
                                 </div>
                                 
                             </div>
 
                             <div class="form-group" id="divImageOrURL" hidden>
                                 <label for="inputImage">Ingresa el URL de la imagen a mostrar</label>
-                                <input type="text" class="form-control" id="inputImage" name="image" placeholder="URL de la imagen" rows="3">
+                                <input type="text" class="form-control" id="inputImage" name="imageURL" placeholder="URL de la imagen" rows="3">
                             </div>  
 
                             <div id="divFileInput">
                                 <label for="content-image">Ingresa una imagen para mostrar</label>
                                 <div class="custom-file" id="content-image">
-                                    <input type="file" class="custom-file-input" id="fileImage" name="imageURL" lang="es">
+                                    <input type="file" class="custom-file-input" id="fileImage" name="image" lang="es">
                                     <label class="custom-file-label" for="fileImage">Seleccionar imagen</label>
                                 </div>
                             </div>
@@ -385,9 +384,13 @@
     <script src="lib/popper-1.16.0/popper.min.js"></script>
     <script src="lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
 
-    <!-- Typeahead -->
+    <!-- Typeahead -->    
     <script src="lib/typeahead.js/bootstrap-typeahead.min.js"></script>
-    
+
+    <!-- tablesorter -->
+    <script src="lib/tablesorter/js/jquery.tablesorter.min.js"></script>
+    <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+
     <!-- Functions -->
     <script src="js/functions.js"></script>
 </body>
