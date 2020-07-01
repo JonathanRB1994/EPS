@@ -2,12 +2,13 @@
 <?php
     session_start();
 
+    $isAuth=FALSE;
     $isAdmin=FALSE;
     $isTechnical=FALSE;
     // Si la sesión ya cuenta con un usuario logeado, debe redirigirse a la pagina de administrador
     if(isset($_SESSION["login_user"])) { 
         if($_SESSION["login_user"]==TRUE) {
-            $isAdmin = TRUE;
+            $isAuth = TRUE;
         }
 
         if($_SESSION["login_user_role"]==="admin"){
@@ -65,7 +66,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav <?php if(!$isAdmin && !$isTechnical) echo "mr-auto"; ?>">
+                <ul class="navbar-nav <?php if(!$isAuth) echo "mr-auto"; ?>">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -81,7 +82,7 @@
                             <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
                             <a class="dropdown-item" href="ticket.php">Solicitar Ticket</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_images.php">Imagenes almacenadas</a>\
+                            <a class="dropdown-item" href="admin_images.php">Imagenes almacenadas</a>
                             <?php 
                                 } 
                                 if($isAdmin) {
@@ -105,7 +106,7 @@
                     </li>
                 </ul>
                 <?php
-                    if($isAdmin){
+                    if($isAuth){
                 ?>
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
