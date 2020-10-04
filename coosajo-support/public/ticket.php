@@ -20,19 +20,18 @@
             $isTechnical=TRUE;
         }
     }
-
-    
-    
     
     // Conexión a la BD de suporte técnico
     require '../vendor/ticket_db.php';
+
+    require_once("../vendor/global_vars.php"); 
 
     // Mensajes
     $message_failedGenerateTicket=FALSE;
     $message_generateTicket=FALSE;
 
     $token = 0;
-    if(isset($_GET["new_ticket"]) && isset($_POST["description"])){
+    if(isset($_GET["new_ticket"]) && isset($_POST["description"]) && isset($_POST["incidencia"]) && isset($_POST["CIF"])){
         $token = TicketGenerate();
         if($token==0) {
             $message_failedGenerateTicket=TRUE;
@@ -48,7 +47,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN-SUPPORT</title>
+    <?php echo TITLE_PAGE; ?>
+    <?php echo FAV_ICON; ?>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">
@@ -58,9 +60,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="admin_index.php"><?php if($isAdmin || $isTechnical) { echo "ADMIN-SUPPORT";} else {echo "SUPPORT";}?></a>
+            <a class="navbar-brand" href="admin_index.php"><?php if($isAdmin) { echo TITLE_ADMIN;} else if($isTechnical) {echo TITLE_TECHNICAL;} else {echo TITLE_USER;}?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -80,15 +82,15 @@
                             <a class="dropdown-item" href="admin_add_support.php">Nuevo problema</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
-                            <a class="dropdown-item" href="ticket.php">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Generar Ticket</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_images.php">Imagenes almacenadas</a>
+                            <a class="dropdown-item" href="admin_images.php">Imágenes Almacenadas</a>
                             <?php 
                                 } 
                                 if($isAdmin) {
                             ?>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_users.php">Gestión de ususarios</a>
+                            <a class="dropdown-item" href="admin_users.php">Gestión de Usuarios</a>
                             <?php 
                                 } 
                                 if(!$isAdmin && !$isTechnical) {
@@ -96,7 +98,7 @@
                             <a class="dropdown-item" href="index.php">Problemas técnicos</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
-                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Generar Ticket</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="auth.php">Autenticarme</a>
                             <?php
@@ -126,7 +128,7 @@
                 ?>
                 <form class="form-inline" method="POST" action="<?php if($isAdmin || $isTechnical) echo "admin_"; ?>index.php">
                     <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Buscar" name="search" id="search" aria-label="Search" autocomplete="off">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Buscar</button>
                 </form>
             </div>
         </div>
@@ -138,7 +140,7 @@
     <!-- Información de la seeción acutal -->    
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
-            <h1 class="display-4">Solicitar un ticket</h1>
+            <h1 class="display-4">Generar un Ticket</h1>
             <p class="lead">Sí no encontraste tú problema o este no fue solucionado, genera un ticket.</p>
         </div>
     </div>
@@ -191,7 +193,7 @@
     <!-- Contenedor de las tarjetas -->
     <div class="main">
         <div class="container">
-            <div class="cards">
+            <div class="cards pb-4">
                 
                 <?php
                     // Nuevo ticket
@@ -200,18 +202,39 @@
                         if($token==0){
                 ?>
                 <!-- Formulario de solicitud de ticket -->
-                <div class="card bg-dark mt-4 text-white col-12">
+                <div class="card bg-dark mt-4 px-0 text-white col-12">
                     <div class="card-header  pt-4">
                         <h5 class="card-title">Generar un ticket de soporte técnico</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body text-left">
                         <form action="ticket.php?new_ticket=TRUE" method="POST">
+                            <input type="hidden" name="hiddenAll" id="hiddenAll" value="yes">
+                            <div class="form-group">
+                                <label for="tipoIncidencia">Tipo de incidencia</label>
+                                <select class="form-control" id="select_tipo_incidencia" name="tipo_incidencia">                                
+                                    <?php $ti = PrintIncidenciasTipo(); ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="incidencia">Incidencia</label>
+                                <select class="form-control" id="ticket_select_incidencia" name="incidencia">
+                                    <?php PrintIncidencias($ti, "", "yes", "yes"); ?>
+                                </select>
+                            </div>
+                            <div class="form-group" id="div_other" hidden>
+                                <label for="other">Ingresa tu tipo de incidencia</label>
+                                <input type="text" class="form-control" id="other" name="other" placeholder="Incidencia">
+                            </div> 
+                            <div class="form-group">
+                                <label for="inputCIF">Ingresa tu número de CIF</label>
+                                <input type="text" class="form-control" id="inputCIF" name="CIF" placeholder="CIF" required="required">
+                            </div> 
                             <div class="form-group">
                                 <label for="inputDescription">Ingresa la descripción de tu problema</label>
                                 <textarea class="form-control" id="inputDescription" name="description" placeholder="Descripción" rows="3" required="required"></textarea>
                             </div>                      
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary px-4 mt-3">Generar un token de soporte</button>
+                                <button type="submit" class="btn btn-outline-primary px-4 mt-3">Generar un token de soporte</button>
                             </div>                        
                         </form>
                     </div>
@@ -220,7 +243,7 @@
                         // El ticket fue creado
                         // Mostrar informacion del ticket
                         }else{
-                            TicketNewInfo($token);
+                            TicketPrint("yes",$token);
                         }
                     //Imprimir formulario de buscar informacion del ticket
                     }else{
@@ -230,14 +253,14 @@
                     <div class="card-header">
                         <h5 class="card-title inline">Consulta de ticket</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body text-left">
                         <form action="ticket.php" method="POST">
                             <div class="form-group">
                                 <label for="inputTicket">Ingresa tu código de ticket</label>
                                 <input type="text" class="form-control" id="inputTicket" name="ticket" required="required" placeholder="Código de ticket" value="<?php if(isset($_POST["ticket"])) { echo $_POST["ticket"];} else { echo "1"; } ?>">
                             </div>                     
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary px-4 mt-3">Buscar</button>
+                                <button type="submit" class="btn btn-outline-primary px-4 mt-3">Buscar</button>
                             </div>   
                         </form>
                     </div>
@@ -246,7 +269,7 @@
                         // Sí se realizo la busqueda, imprimir el resultado del ticket buscado
                         if(isset($_POST["ticket"])){
                             // Buscar la ticket
-                            TicketPrint();
+                            TicketPrint("no",$_POST["ticket"]);
                             //unset($_POST["ticket"]);
                         }
                     }
@@ -268,7 +291,7 @@
     <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
 
     <!-- Functions -->
-    <script src="js/functions.js"></script>
+    <script src="js/ticket_functions.js"></script>
 </body>
 
 </html>

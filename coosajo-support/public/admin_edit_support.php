@@ -23,6 +23,11 @@
     // Conexión a la BD de suporte técnico
     require '../vendor/admin_support_db.php';         
 
+    // Conexión a la BD de suporte técnico
+    require '../vendor/ticket_db.php';
+
+    require_once '../vendor/global_vars.php';
+
     // Mensajes de alertas
     $message_failedEditSupport = FALSE;
     $message_editSupport = FALSE;    
@@ -31,7 +36,7 @@
     $message_incorrectFile=FALSE;
 
     // Actualizar problema de soporte técnico en la BD
-    if(isset($_GET["support_id"]) && isset($_POST["title"]) && isset($_POST["description"]) ){                
+    if(isset($_GET["support_id"]) && isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["incidencia"]) && isset($_POST["tipo_incidencia"])){                
         // Agregar a la base de datos,      
         if(AdminEditSupport()==TRUE){
             $message_editSupport = TRUE;
@@ -62,7 +67,7 @@
                     || ($_FILES["image"]["type"] === "image/png")){
                         // Obtener la ruta en archivos temporales
                         $tmp_name = $_FILES["image"]["tmp_name"];
-                        // Carpeta donde guardaremos las imagenes
+                        // Carpeta donde guardaremos las Imágenes
                         $dir = "img/";
                         $nombre_img = basename($_FILES["image"]["name"]);
                         $subido = move_uploaded_file($tmp_name, $dir.$nombre_img);
@@ -100,7 +105,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN-SUPPORT</title>
+    <?php echo TITLE_PAGE; ?>
+    <?php echo FAV_ICON; ?>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">
@@ -112,7 +120,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.php">ADMIN-SUPPORT</a>
+            <a class="navbar-brand" href="index.php"><?php if($_SESSION["login_user_role"]==="technical") {echo TITLE_TECHNICAL;} else {echo TITLE_ADMIN;} ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -129,14 +137,14 @@
                         <a class="dropdown-item" href="admin_add_support.php">Nuevo problema</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
-                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Generar Ticket</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_images.php">Imagenes almacenadas</a>
+                            <a class="dropdown-item" href="admin_images.php">Imágenes Almacenadas</a>
                             <?php 
                                 if ($isAdmin) {
                             ?>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_users.php">Gestión de ususarios</a>
+                            <a class="dropdown-item" href="admin_users.php">Gestión de Usuarios</a>
                             <?php
                                 }
                             ?>
@@ -193,7 +201,7 @@
     ?>
         <div class="container ">            
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                No se pudo subir la imagen, verifica su peso y su extención (jpg, jpeg, png, gif).
+                No se pudo subir la imagen, verifica su peso y su extensión (jpg, jpeg, png, gif).
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -292,7 +300,7 @@
     <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
 
     <!-- Functions -->
-    <script src="js/functions.js"></script>
+    <script src="js/admin_functions.js"></script>
 </body>
 
 </html>

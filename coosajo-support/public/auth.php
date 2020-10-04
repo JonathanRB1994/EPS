@@ -4,6 +4,8 @@
     // Conexión a la BD de suporte técnico
     require '../vendor/support_db.php';
 
+    require_once("../vendor/global_vars.php"); 
+
     // Mensajes
     $message_failedLogin = FALSE;
 
@@ -38,7 +40,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUPPORT</title>
+    <?php echo TITLE_PAGE; ?>
+    <?php echo FAV_ICON; ?>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">
@@ -48,9 +53,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index.php">SUPPORT</a>
+            <a class="navbar-brand" href="index.php"><?php echo TITLE_USER; ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -66,7 +71,7 @@
                             <a class="dropdown-item" href="index.php">Problemas técnicos</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
-                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Generar Ticket</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="auth.php">Autenticarme</a>
                         </div>
@@ -74,7 +79,7 @@
                 </ul>
                 <form class="form-inline" method="POST" action="index.php">
                     <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Buscar" name="search" id="search" aria-label="Search" autocomplete="off">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Buscar</button>
                 </form>
             </div> 
         </div>
@@ -106,22 +111,22 @@
     <!-- Contenedor de las tarjetas -->
     <div class="main">
         <div class="container">
-            <div class="card bg-dark mt-4 text-white col-12">
+            <div class="card bg-dark mt-4 px-0 text-white col-12">
                 <div class="card-header pl-4 pt-4">
                     <h5 class="card-title">Datos de Autenticación</h5>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 text-left">
                     <form action="auth.php" method="POST">
                         <div class="form-group">
                             <label for="inputUsername">Ingresa el nombre de usuario</label>
-                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Nombre de ususario" required="required">
+                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Nombre de usuario" required="required">
                         </div>
                         <div class="form-group">
                             <label for="inputPassword4">Ingresa la contraseña</label>
                             <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Contraseña" required="required">
                         </div>                        
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary px-4 mt-3">Iniciar sesión</button>
+                            <button type="submit" class="btn btn-outline-primary px-4 mt-3">Iniciar sesión</button>
                         </div>                        
                     </form>
                 </div>

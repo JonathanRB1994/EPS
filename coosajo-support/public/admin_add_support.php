@@ -18,6 +18,11 @@
     // Conexión a la BD de suporte técnico
     require '../vendor/admin_support_db.php';           
 
+    // Conexión a la BD de suporte técnico
+    require '../vendor/ticket_db.php';  
+    
+    require_once '../vendor/global_vars.php';
+
     // Mensajes de alertas
     $message_failedAddSupport = FALSE;
     $message_failedAddStep = FALSE;
@@ -29,7 +34,7 @@
     $total_steps = 0;
 
     // Insertar problema de soporte tecnico
-    if(!isset($_GET["support_id"]) && isset($_POST["title"]) && isset($_POST["description"])){                
+    if(!isset($_GET["support_id"]) && isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["incidencia"]) && isset($_POST["tipo_incidencia"])){                
         // Agregar a la base de datos,        
         if(AdminAddSupport()==FALSE){
             $message_failedAddSupport = TRUE;
@@ -56,8 +61,8 @@
                     || ($_FILES["image"]["type"] === "image/png")){
                         // Obtener la ruta en archivos temporales
                         $tmp_name = $_FILES["image"]["tmp_name"];
-                        // Carpeta donde guardaremos las imagenes
-                        $dir = "img/";
+                        // Carpeta donde guardaremos las Imágenes
+                        $dir = IMAGES_PATH;
                         $nombre_img = basename($_FILES["image"]["name"]);
                         $subido = move_uploaded_file($tmp_name, $dir.$nombre_img);
                         // Verificar si se subio y guardo correctamente la imagen
@@ -103,7 +108,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN-SUPPORT</title>
+    <?php echo TITLE_PAGE; ?>
+    <?php echo FAV_ICON; ?>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="lib/bootstrap-4.5.0/css/bootstrap.min.css">
@@ -113,9 +122,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index.php">ADMIN-SUPPORT</a>
+            <a class="navbar-brand" href="index.php"><?php if($_SESSION["login_user_role"]==="technical") {echo TITLE_TECHNICAL;} else {echo TITLE_ADMIN;} ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -132,14 +141,14 @@
                         <a class="dropdown-item" href="admin_add_support.php">Nuevo problema</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="ticket.php">Consultar Ticket</a>
-                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Solicitar Ticket</a>
+                            <a class="dropdown-item" href="ticket.php?new_ticket=TRUE">Generar Ticket</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_images.php">Imagenes almacenadas</a>
+                            <a class="dropdown-item" href="admin_images.php">Imágenes Almacenadas</a>
                             <?php 
                                 if ($isAdmin) {
                             ?>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="admin_users.php">Gestión de ususarios</a>
+                            <a class="dropdown-item" href="admin_users.php">Gestión de Usuarios</a>
                             <?php
                                 }
                             ?>
@@ -161,7 +170,7 @@
                 </ul>
                 <form class="form-inline" method="POST" action="admin_index.php">
                     <input class="form-control mr-sm-2 typeahead" type="search" placeholder="Buscar" name="search" id="search" aria-label="Search" autocomplete="off">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Buscar</button>
                 </form>
             </div>
         </div>
@@ -174,7 +183,7 @@
     <div class="jumbotron d-none d-sm-none d-md-block">
         <div class="container">
             <h1 class="display-4">Pasos de solución</h1>
-            <p class="lead">Agregar los pasos para la solución del problema técnico.</p>
+            <p class="lead">Agregar los pasos para dar solución del problema técnico.</p>
         </div>
     </div>    
     <?php
@@ -196,7 +205,7 @@
     ?>
         <div class="container ">            
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                No se pudo subir la imagen, verifica su peso y su extención (jpg, jpeg, png, gif).
+                No se pudo subir la imagen, verifica su peso y su extensión (jpg, jpeg, png, gif).
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -269,7 +278,7 @@
     
     <!-- Contenedor de las tarjetas -->
     <div class="main">
-        <div class="container">
+        <div class="container pb-4">
         <?php
             if( isset($_GET["support_id"]) ){
             //if( TRUE ){
@@ -279,11 +288,11 @@
                     AdminSupportPrintStepCards("admin_add_support");
         ?>        
             <!-- Imprimir formulario para agregar un paso -->
-            <div class="card bg-dark mt-4 text-white col-12">
+            <div class="card bg-light px-0 mt-4 col-12">
                 <div class="card-header  pt-4">
                     <h5 class="card-title">Agregar paso para solucionar el problema técnico</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-left">
                     <form action="admin_add_support.php?support_id=<?php echo $_GET["support_id"]; ?>" enctype="multipart/form-data" method="POST">
                         <div class="form-group">
                             <label for="inputNumber">Ingresa el número del paso a agregar</label>
@@ -294,7 +303,7 @@
                             <input type="text" class="form-control" id="inputTitle" name="title" required="required" placeholder="Título del problema técnico">
                         </div>
                         <div class="form-group">
-                            <label for="inputDescription">Ingresa su descripción</label>
+                            <label for="inputDescription">Ingresar descripción</label>
                             <textarea class="form-control" id="inputDescription" name="description" required="required" placeholder="Descripción" rows="3"></textarea>
                         </div>                        
 
@@ -309,9 +318,9 @@
                                 <label class="form-check-label" for="inlineRadio2">No</label>
                             </div>
                         </div>                                               
-                        
+                        <?php if(UPLOAD_IMAGES){ ?>
                         <div class="form-group" id="divImage" hidden>
-                            <p class="card-text">¿Subira una imagen o una URL?</p>
+                            <p class="card-text">Subirá</p>
                             <div class="form-group text-center">
                                 <div class="form-check form-check-inline px-3">
                                     <input class="form-check-input" type="radio" name="addURL" id="inlineRadio3" value="URL">
@@ -320,17 +329,14 @@
                                 <div class="form-check form-check-inline px-3">
                                     <input class="form-check-input" type="radio" name="addURL" id="inlineRadio4" value="image" checked>
                                     <label class="form-check-label" for="inlineRadio4">Imagen</label>
-                                </div>
-                                
+                                </div>                                
                             </div>
 
                             <div class="form-group" id="divImageOrURL" hidden>
-                                <label for="inputImage">Ingresa el URL de la imagen a mostrar</label>
                                 <input type="text" class="form-control" id="inputImage" name="imageURL" placeholder="URL de la imagen" rows="3">
                             </div>  
 
                             <div id="divFileInput">
-                                <label for="content-image">Ingresa una imagen para mostrar</label>
                                 <div class="custom-file" id="content-image">
                                     <input type="file" class="custom-file-input" id="fileImage" name="image" lang="es">
                                     <label class="custom-file-label" for="fileImage">Seleccionar imagen</label>
@@ -338,34 +344,75 @@
                             </div>
                             
                         </div>                          
-                                                
+                        <?php }else{ ?>
+                        <div class="form-group" id="divImage" hidden>                            
+                            <div class="form-group text-center" hidden>
+                                <div class="form-check form-check-inline px-3">
+                                    <input class="form-check-input" type="radio" name="addURL" id="inlineRadio3" value="URL" checked>
+                                    <label class="form-check-label" for="inlineRadio3">URL</label>
+                                </div>    
+                                <div class="form-check form-check-inline px-3">
+                                    <input class="form-check-input" type="radio" name="addURL" id="inlineRadio4" value="image">
+                                    <label class="form-check-label" for="inlineRadio4">Imagen</label>
+                                </div>                                
+                            </div>
+
+                            <div class="form-group" id="divImageOrURL">
+                                <label for="imageURL">Ingresar URL</label>
+                                <input type="text" class="form-control" id="inputImage" name="imageURL" placeholder="URL de la imagen" rows="3">
+                            </div>  
+
+                            <div id="divFileInput">
+                                <div class="custom-file" id="content-image" hidden>
+                                    <input type="file" class="custom-file-input" id="fileImage" name="image" lang="es">
+                                    <label class="custom-file-label" for="fileImage">Seleccionar imagen</label>
+                                </div>
+                            </div>
+                            
+                        </div>                           
+                        <?php } ?>
+
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary px-4 mt-3">Agregar paso de solución</button>
+                            <button type="submit" class="btn btn-outline-primary px-4 mt-3">Agregar paso de solución</button>
                         </div>                        
                     </form>
                 </div>
             </div>
-        <?php
-                
+        <?php                
             }else{
         ?>
             <!-- Imprimir formulario para agregar un problema tecnico -->
-            <div class="card bg-dark mt-4 text-white col-12">
+            <div class="card bg-light px-0 mt-4 col-12">
                 <div class="card-header pl-4 pt-4">
                     <h5 class="card-title">Datos del problema técnico</h5>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 text-left">
                     <form action="admin_add_support.php" method="POST">
+                        <input type="hidden" name="hiddenAll" id="hiddenAll" value="yes">
+                        <div class="form-group">
+                            <label for="tipoIncidencia">Tipo de incidencia</label>
+                            <select class="form-control" id="select_tipo_incidencia" name="tipo_incidencia">                                
+                                <?php $ti = PrintIncidenciasTipo("all"); ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="incidencia">Incidencia</label>
+                            <select class="form-control" id="select_incidencia" name="incidencia">
+                                <?php PrintIncidencias($ti, "", "yes"); ?>
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="inputTitle">Ingresa el título del problema técnico</label>
                             <input type="text" class="form-control" id="inputTitle" name="title" required="required" placeholder="Título del problema técnico">
                         </div>
                         <div class="form-group">
-                            <label for="inputDescription">Ingresa su descripción</label>
+                            <label for="inputDescription">Ingresar descripción</label>
                             <textarea class="form-control" id="inputDescription" name="description" required="required" placeholder="Descripción" rows="3"></textarea>
                         </div>                      
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary px-4 mt-3">Agregar problema técnico</button>
+                            <button type="submit" class="btn btn-outline-primary px-4 mt-3">Agregar problema técnico</button>
                         </div>                        
                     </form>
                 </div>
@@ -392,7 +439,7 @@
     <script src="lib/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
 
     <!-- Functions -->
-    <script src="js/functions.js"></script>
+    <script src="js/admin_functions.js"></script>
 </body>
 
 </html>
