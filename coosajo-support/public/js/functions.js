@@ -1,15 +1,5 @@
-// Add the following code if you want the name of the file appear on select
-$(".custom-file-input").on("change", function() {
-    var fileName = $(this).val().split("\\").pop();
-    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-});
-
 $(document).ready(function(){
-    $("#tableUsers").tablesorter({
-        theme : "bootstrap",
-        widthFixed: true    
-      });
-
+    // Mostrar el autocompletado de la busqueda
     $('#search').typeahead({        
         source: function (query, result) {
             $.ajax({
@@ -26,38 +16,79 @@ $(document).ready(function(){
         }
     });
 
-    $('input[name=addImage]').click(function(){
-        var inputValue = $(this).attr("value");
-        var fileInput = document.getElementById("divImage");
-        if(inputValue==="yes"){
-            fileInput.removeAttribute("hidden");
+    // Boton mostrar y ocultar filtros
+    var hiddenFilters = true;  // Por defecto los filtros estan ocultos
+    $('#btn_hidden_filters').click(function(){                
+        var pathIconDown = document.getElementById("path_down_icon");
+        var pathIconUp = document.getElementById("path_up_icon");
+        var divFilters = document.getElementById("div_filters");
+        if(hiddenFilters){
+            pathIconDown.setAttribute("hidden", true);
+            pathIconUp.removeAttribute("hidden");
+            divFilters.removeAttribute("hidden");
+            hiddenFilters=false;
         }else{
-            fileInput.setAttribute("hidden", false); // no effect
+            pathIconDown.removeAttribute("hidden");
+            pathIconUp.setAttribute("hidden", true);
+            divFilters.setAttribute("hidden", true);
+            hiddenFilters=true;
         }        
     });
 
-    $('input[name=delImage]').click(function(){
-        var inputValue = $(this).attr("value");
-        var fileInput = document.getElementById("divAddSourceImage");
-        if(inputValue==="no"){
-            fileInput.removeAttribute("hidden");
-        }else{
-            fileInput.setAttribute("hidden", false); // no effect
-        }        
+    const hiddenAll = $('#hiddenAll');
+    const divPrintCards = $('#div_print_cards');
+    const selectTendencias = $('#select_tendencias');    
+    const selectTipoIncidencia = $('#select_tipo_incidencia');
+    const selectIncidencia = $('#select_incidencia');    
+
+    // Deteccion del cambio de filtro tendencias
+    selectTendencias.change(function (){
+        var jt = JSON.parse(selectTipoIncidencia.val());
+        var ji = JSON.parse(selectIncidencia.val());
+        //console.log(`${selectTendencias.val()} | ${jt.id} | all`);         
+        divPrintCards.load('ajax_support.php', 
+        {
+            tendencia: selectTendencias.val(),
+            tipoIncidencia: `${jt.id}`,
+            incidencia: `${ji.id}`
+        }, PrintResponse);
     });
 
-    $('input[name=addURL]').click(function(){
-        var inputValue = $(this).attr("value");
-        
-        var fileInput = document.getElementById("divFileInput");
-        var urlInput = document.getElementById("divImageOrURL");
-        if(inputValue==="image"){
-            fileInput.removeAttribute("hidden");
-            urlInput.setAttribute("hidden", false);
-        }else if(inputValue==="URL"){
-            fileInput.setAttribute("hidden", false); 
-            urlInput.removeAttribute("hidden");
-        }        
+    // Deteccion del cambio de filtro tipo incidencia
+    selectTipoIncidencia.change(function (){
+        var jt = JSON.parse(selectTipoIncidencia.val());        
+        //console.log(`${selectTendencias.val()} | ${jt.id} | all | ${hiddenAll.val()}`); 
+        divPrintCards.load('ajax_support.php', 
+        {
+            tendencia: selectTendencias.val(),
+            tipoIncidencia: `${jt.id}`,
+            incidencia: "all"
+        }, PrintResponse);
+
+        selectIncidencia.load('ajax_ticket.php',
+        {
+            other: "no",
+            hiddenAll: hiddenAll.val(),
+            tipoIncidencia: `${jt.id}`
+        }, PrintResponse);
     });
+
+    // Deteccion del cambio de filtro incidencia
+    selectIncidencia.change(function (){
+        var jt = JSON.parse(selectTipoIncidencia.val());
+        var ji = JSON.parse(selectIncidencia.val());
+        //console.log(`${selectTendencias.val()} | ${jt.id} | ${ji.id}`); 
+        divPrintCards.load('ajax_support.php', 
+        {
+            tendencia: selectTendencias.val(),
+            tipoIncidencia: `${jt.id}`,
+            incidencia: `${ji.id}`
+        }, PrintResponse);
+    });
+
+    function PrintResponse (responseText, textStatus, request) {
+        //console.log(responseText);
+        //console.log(responseText);
+        //console.log(responseText);
+    }
 });
-
